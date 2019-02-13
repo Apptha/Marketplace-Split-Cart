@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+    <name>Apptha_MarketplaceSplitcart</name>
+    <version>1.0.0</version>
+    <stability>stable</stability>
+    <license>OSL v3.0</license>
+    <channel>community</channel>
+    <extends/>
+    <summary> Apptha-Marketplace Splitcart allows to split the cart based on seller products and to maintain the remaining seller products on cart basket in checkout</summary>
+    <description> Apptha-Marketplace Splitcart allows to split the cart based on seller products and to maintain the remaining seller products on cart basket in checkout</description>
+    <notes> Apptha-Marketplace Splitcart allows to split the cart based on seller products and to maintain the remaining seller products on cart basket in checkout</notes>
+    <authors><author><name>apptha</name><user>apptha</user><email>info@apptha.com</email></author></authors>
+    <date>2015-12-19</date>
+    <time>14:22:51</time>
+    <contents><target name="magelocal"><dir name="Apptha"><dir name="Multicart"><dir name="Helper"><file name="Data.php" hash="53d04bcc7b8cd67dd6148065dabe190a"/></dir><dir name="Model"><dir name="Observer"><file name="Checkout.php" hash="3849d62954518c26c7b78bdf27c69fae"/></dir><file name="Observer.php" hash="04f1cd0de4052d39fc66cf45640ddf7e"/></dir><dir name="etc"><file name="adminhtml.xml" hash="48a9218d4eca180ba571f19ceaad2f72"/><file name="config.xml" hash="dfd2c03a12be855027ea59728c96628c"/><file name="system.xml" hash="3c4e79638f6b06b77823289b59f49990"/></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Apptha_Multicart.xml" hash="1f6a328c76cb58ef7b9fde5bba1a8996"/></dir></target><target name="magedesign"><dir name="frontend"><dir name="base"><dir name="default"><dir name="template"><dir name="multicart"><dir name="cart"><file name="items.phtml" hash="872e22ede90ea8b979c64134b8971911"/></dir><file name="cart.phtml" hash="480fba300f67f45e7a6f997e875428d0"/><file name="info.phtml" hash="a28a06586ed16dff57907ae6c7372993"/><file name="minicart.phtml" hash="7a1e3d44c94552ce19986fac2f82bf55"/></dir></dir><dir name="layout"><file name="multicart.xml" hash="5de7d6258f2d64be4f9cbbaed87d42c0"/></dir></dir></dir></dir></target><target name="mageskin"><dir name="frontend"><dir name="base"><dir name="default"><dir name="css"><dir name="multicart"><file name="multicart.css" hash="9770f0d5c08dffdb7f1bc3772918a404"/></dir></dir></dir></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.2.0</min><max>6.0.0</max></php></required></dependencies>
+</package>

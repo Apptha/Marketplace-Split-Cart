@@ -1,0 +1,176 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Multicart
+ * @version     1.0
+ * 
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+/**
+ * Checking whether module Enabled or not
+ */
+if(Mage::getStoreConfig("multicart/catalog/enabled")){
+/**
+ * Get Summary Count
+ */
+$_cartQty = $this->getSummaryCount ();
+/**
+ * Quote Empty Or not
+ */
+if (empty ( $_cartQty )) {
+/**
+ * Assigning qty to zero
+*/
+   $_cartQty = 0;
+}
+
+$_itemss = Mage::getSingleton ( 'core/session' )->getMpSplitCart ();
+/**
+ * Checking Whether checkout reached or not
+ */
+$checkoutReached = Mage::getSingleton ( 'core/session' )->getCheckoutReached ();
+/**
+ * Checking CheckoutReached 
+ */
+if ($checkoutReached == 1) {
+    /**
+     * Getting custom session Items
+     */
+    $_itemss = Mage::getSingleton ( 'core/session' )->getMpSplitCart ();
+  
+    $qty = 0;
+    /**
+     * Incrementing foreach loop
+     */
+    foreach ( $_itemss as $item){
+        /**
+         * Checking arary or not
+         * 
+         * Getting Item Details
+         * 
+         * 
+         */
+
+$productId= $item['id'];
+/**
+ * Load Product data
+ */
+$products = Mage::getModel('catalog/product')->load($productId);
+/**
+ * Checing Visibility Status
+*/
+       $assignProduct= $products->getIsAssignProduct();
+       $isVisibleProduct = $products->isVisibleInSiteVisibility();
+        
+       $visibilty = $products->getVisibility();
+        
+        $customerId= $products->getCustomerId();
+         
+        /**
+         * Get Product Url
+         */
+     
+if($visibilty!= 4 && $assignProduct ==0 && $products->getTypeId()=='simple'){
+
+ $item['id'];
+unset($_itemss[$item['id']]);
+}
+}
+foreach ( $_itemss as $item){
+$productId= $item['id'];
+        if (is_array ( $item )) {
+/**
+ * Incrementing Qty
+ */
+            $qty += $item ['qty'];
+        }
+    }
+     $_cartQty = $qty;
+}
+  ?>
+  <?php
+  /**
+  Showing Header Label 
+  */
+  ?>
+<a href="#header-cart" title="Shopping Cart"
+class="skip-link skip-cart <?php if($_cartQty <= 0): ?> no-count<?php endif; ?>">
+<span class="icon"></span> <span class="label"><?php echo $this->__('Cart'); ?></span>
+<span class="count"><?php echo $_cartQty; ?></span>
+</a>
+<?php 
+/**
+ * Showing Header Cart
+ * 
+ * 
+ * Get Child Html of Header
+ */
+?>
+<div id="header-cart" class="block block-cart skip-content">
+    <?php echo $this->getChildHtml('minicart_content');?>
+</div>
+<?php }
+else{
+/**
+ * Get cart Quantity
+ */
+    $_cartQty = $this->getSummaryCount();
+    /**
+     *Checking Whether Qty Empty or not
+     */
+    if(empty($_cartQty)) {
+        $_cartQty = 0;
+    }
+    ?>
+    <?php 
+    /**
+     * Display header Block
+     */
+     ?>
+    <a href="#header-cart" title="Shopping Cart" class="skip-link skip-cart <?php if($_cartQty <= 0): ?> no-count<?php endif; ?>">
+        <span class="icon"></span>
+        <span class="label"><?php echo $this->__('Cart'); ?></span>
+        <?php 
+        /**
+         * Show Cart Qty
+         */
+        ?>
+        <span class="count"><?php echo $_cartQty; 
+        
+      
+        ?></span>
+    </a>
+    <?php 
+      /**
+        * Showing minicart Content
+        */
+      ?>
+    <div id="header-cart" class="block block-cart skip-content">
+        <?php echo $this->getChildHtml('minicart_content');?>
+    </div>
+ <?php   
+}?>

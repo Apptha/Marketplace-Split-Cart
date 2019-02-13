@@ -1,0 +1,432 @@
+<?php
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ * @package     Apptha_Multicart
+ * @version     1.0
+ * @author      Apptha Team <developers@contus.in>
+ * @copyright   Copyright (c)2015 Apptha.(http://www.apptha.com)
+ * @license     http://www.apptha.com/LICENSE.txt
+ *
+ */
+?>
+<?php
+/**
+ * Getting Currency Symbol
+ */
+$currencySymbol= Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+/**
+ * Checking Multicart Enabled or not
+ */
+if(Mage::getStoreConfig("multicart/catalog/enabled")){
+/**
+ * Getting custom session
+ */
+$checkoutReached=   Mage::getSingleton('core/session')->getCheckoutReached();
+/**
+ * Checking Whether Checkout Reached or not
+ */
+if($checkoutReached!=1){
+/**
+ * Get Summary of cart
+ */
+$_cartQty = $this->getSummaryCount();
+if(empty($_cartQty)) {
+    $_cartQty = 0;
+}?>
+<div id="minicart-error-message" class="minicart-message"></div>
+<div id="minicart-success-message" class="minicart-message"></div>
+<div class="minicart-wrapper">
+<p class="block-subtitle">
+        <?php echo $this->__('Recently added item(s)') ?>
+        <a class="close skip-link-close" href="#" title="<?php echo $this->__('Close'); ?>">&times;</a> </p>
+   <?php 
+   /**
+    * Get Recent Items
+    */?>
+   <?php $_items = $this->getRecentItems();
+   /**
+    * Getting checkout reached or not
+    */
+    $checkoutReached=   Mage::getSingleton('core/session')->getCheckoutReached();  ?>
+    <?php
+/**
+ * Get Count OF Items
+ */
+     $countItems = count($_items); ?>
+    <?php if($countItems): ?>
+        <div>
+            <ul id="cart-sidebar" class="mini-products-list">
+            <?php 
+            /**
+             * Incrementing Foreach loop
+             */
+            ?>
+           <?php foreach($_items as $_item):?>
+                <?php 
+                /**
+                 * Get Item Details
+                 */
+                
+                $productId=$_item->getProductId();
+                
+                
+                $products = Mage::getModel('catalog/product')->load($productId);
+                /**
+                 * Checing Visibility Status
+                */
+                $assignProduct= $products->getIsAssignProduct();
+                $isVisibleProduct = $products->isVisibleInSiteVisibility();
+                
+                $visibilty = $products->getVisibility();
+                
+                $customerId= $products->getCustomerId();
+                 
+                /**
+                 * Get Product Url
+                */
+                 
+                if($visibilty== 4 && $assignProduct ==0 || $assignProduct ==1){
+                ?>
+               <?php echo $this->getItemHtml($_item);   }?>
+                <?php endforeach; ?></ul></div>
+        <script type="text/javascript">
+            decorateList('cart-sidebar', 'none-recursive');
+            $j('document').ready(function() {
+                var minicartOptions  = {
+                    formKey:           "<?php echo $this->getFormKey();?>"
+                }
+                var Mini = new Minicart(minicartOptions);
+                Mini.init();
+            });
+        </script>
+      <div id="minicart-widgets">
+            <?php echo $this->getChildHtml('cart_promotion') ?> </div>
+        <div class="block-content">
+        <?php 
+        /**
+         * Sub total Block
+         */
+        
+        ?>
+            <p class="subtotal">
+                <?php if ($this->canApplyMsrp()): ?>
+                    <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?>
+                    </span>
+                <?php else: ?>
+                    <span class="label"><?php echo $this->__('Cart Subtotal:') ?>
+                    </span> 
+                    <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
+                    <?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
+                        <br />(<?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> 
+                        <?php echo Mage::helper('tax')->getIncExcText(true) ?>)
+                    <?php endif; ?>
+                <?php endif; ?>
+            </p></div>
+    <?php 
+    /**
+     * Checking Whether POsiible to onestepcheckout or not
+     */
+      if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+            <div class="minicart-actions splitcart-header">
+                <a class="cart-link" href="<?php echo $this->getUrl('checkout/cart'); ?>">
+                    <?php echo $this->__('View Shopping Cart'); ?> </a>
+                <ul class="checkout-types minicart">
+                    <?php echo $this->getChildHtml('extra_actions') ?><li>
+                        <a style="background:inherit;cursor:default;" title="<?php echo $this->__('Checkout') ?>" class="button checkout-button" 
+                        href="<?php echo $this->getCheckoutUrl() ?>"></a>
+                    </li>
+                </ul>
+            </div>
+        <?php endif ?>
+ <?php else: ?>
+        <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+  <?php endif ?>
+</div>
+<?php }?>
+<?php 
+if($checkoutReached==1){
+/**
+ * Get Minicart Count
+ */
+$shoppingCart=Mage::getStoreConfig("checkout/sidebar/count"); 
+/**
+ * Get custom datas from session
+ */
+$itemDatas= Mage::getSingleton('core/session')->getMpSplitCart();?>
+<div class="minicart-wrapper">
+<p class="block-subtitle">
+        <?php echo $this->__('Recently added item(s)') ?>
+        <a class="close skip-link-close" href="#" title="<?php echo $this->__('Close'); ?>">&times;</a>
+    </p>
+    <div>
+     <ul id="cart-sidebar" class="mini-products-list">
+<?php 
+/**
+ * Get currency symbol
+ */
+$currencySymbol= Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+/**
+ * Incrementing foreach loop
+ */
+foreach($itemDatas as $item){
+/**
+ * Defining array
+ */
+$subtotal[]=$item['price'];
+/**
+ * Getting Qty
+ */
+$qty[]=$item['qty'];
+}
+$i=1;
+/**
+ * Incrementing For loop
+ */
+for($j = 0; $j < count($subtotal); $j++) {
+/**
+ *Calculating Subtotal
+ */
+    $result[] = $qty[$j] * $subtotal[$j];
+}
+/**
+ * Incrementing foreach loop
+ */
+foreach($itemDatas as $items){
+    ?>
+        <?php
+        /**
+         * Get Product Id
+         */ 
+         $productId= $items['id'];
+         /**
+          * Load Product data
+          */
+        $products = Mage::getModel('catalog/product')->load($productId);
+        /**
+         * Checing Visibility Status
+         */
+        $assignProduct= $products->getIsAssignProduct();
+        $customerId= $products->getCustomerId();
+        $visibilty= $isVisibleProduct = $products->isVisibleInSiteVisibility();
+        /**
+         * Get Product Url
+         */
+       $productUrl=$products->getProductUrl();
+       if($assignProduct==1 && $visibilty==''){
+        $visibilty=1;
+        $assignProduct=0;
+        }
+       ?>
+    <?php  if($visibilty==1 && $assignProduct==0){?>
+    <li class="item odd" xmlns="http://www.w3.org/1999/html">
+    <a href="<?php echo $productUrl;?>" title="<?php echo $items['name'];?>" class="product-image">
+        <img src="<?php echo Mage::helper('catalog/image')->init($products, 'small_image')->keepFrame(true)->resize( 50);?>"  alt="<?php echo $items['name']; ?>"/></a>
+        <div class="product-details">
+         <p class="product-name"> <a href="<?php echo $productUrl;?>">
+                <?php echo $items['name'];?>       </a></p> 
+            <table class="info-wrapper">
+            <tbody>
+               <tr class="qty-wrapper">
+                       <td>
+                         <?php
+                       /**
+                         * Checking Whether Visible Product Or not
+                         */
+              if ($isVisibleProduct): ?>
+                          <a href="<?php echo $productUrl ?>" 
+        title="<?php echo $this->__('Edit item') ?>" class="btn-edit">
+            <?php echo $this->__('Edit item')?>
+        </a>
+           <?php endif ?>
+                   <?php if (!$isVisibleProduct): ?>
+           <?php echo $this->__('Edit item')?>
+          <?php endif ?>
+        <?php echo $items['qty']."*".$currencySymbol.$items['price'];?>
+          </td>
+             </tr>
+              </tbody>
+           </table>
+       <script type="text/javascript">
+            decorateList('cart-sidebar', 'none-recursive');
+            $j('document').ready(function() {
+                var minicartOptions  = {
+                    formKey:           "k8JeVN0uK7bhXHpq"
+                }
+                var Mini = new Minicart(minicartOptions);
+                Mini.init();
+            });
+        </script>
+<div id="minicart-widgets">
+                    </div>
+  </div>
+
+    <?php if($i==$shoppingCart){
+ break;   
+}
+$i++;?>
+
+   </li>
+   <?php }?>
+<?php }?>
+  </ul>
+ </div>
+</div>
+  <?php 
+  /**
+   * Subtotal Div
+   */
+    ?>
+<div class="block-content">
+  <p class="subtotal">
+ <span class="label"><?php echo $this->__('Cart Subtotal:') ?></span> 
+ <?php echo  $currencySymbol. number_format(array_sum($result)); ?></p></div>
+      <div class="minicart-actions splitcart-header">
+                <a class="cart-link" href="<?php echo Mage::getUrl('checkout/cart'); ?>">
+                    View Shopping Cart                </a>
+                <ul class="checkout-types minicart">
+                                        <li>
+                        <a style="background:inherit;cursor:default;" title="Checkout" class="button checkout-button" href="<?php echo Mage::getUrl('checkout/cart'); ?>">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+                <?php }?>
+<?php }
+else{
+?>
+<?php
+/**
+ * Get Cart Qty
+ */
+$_cartQty = $this->getSummaryCount();
+if(empty($_cartQty)) {
+    $_cartQty = 0;
+}
+?>
+<div id="minicart-error-message" class="minicart-message"></div>
+<div id="minicart-success-message" class="minicart-message"></div>
+<div class="minicart-wrapper">
+<p class="block-subtitle">
+        <?php echo $this->__('Recently added item(s)') ?>
+        <a class="close skip-link-close" href="#" title="<?php echo $this->__('Close'); ?>">&times;</a>
+    </p>
+    <?php 
+    /**
+     * Get Recent Items
+     */
+    ?>
+  <?php $_items = $this->getRecentItems() ?>
+  <?php 
+  /**
+   *Get Count Of items 
+   */?>
+    <?php $countItems = count($_items); ?>
+    <?php if($countItems): ?>
+        <div>
+        <?php
+         /**
+        Get Item Content
+         */        ?>
+            <ul id="cart-sidebar" class="mini-products-list">
+            <?php   
+       	/**
+         * Get Product Url
+        */
+		?>
+        <?php foreach($_items as $_item): 
+                $productId=$_item->getProductId();
+                $products = Mage::getModel('catalog/product')->load($productId);
+                /**
+                 * Checing Visibility Status
+                */
+                $assignProduct= $products->getIsAssignProduct();
+                $isVisibleProduct = $products->isVisibleInSiteVisibility();
+                $visibilty = $products->getVisibility();
+                $customerId= $products->getCustomerId();
+                ?>
+                   <?php if($visibilty== 4 && $assignProduct ==0 || $assignProduct ==1){?>
+                    <?php echo $this->getItemHtml($_item);
+                        } ?>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <script type="text/javascript">
+            decorateList('cart-sidebar', 'none-recursive');
+            $j('document').ready(function() {
+                var minicartOptions  = {
+                    formKey:           "<?php echo $this->getFormKey();?>"
+                }
+                var Mini = new Minicart(minicartOptions);
+                Mini.init();
+            });
+        </script>
+  <div id="minicart-widgets">
+            <?php echo $this->getChildHtml('cart_promotion') ?>
+        </div>
+        <div class="block-content">
+            <p class="subtotal">
+                <?php if ($this->canApplyMsrp()): ?>
+                    <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
+                <?php else: ?>
+                    <span class="label"><?php echo $this->__('Cart Subtotal:') ?></span> 
+                    <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?>
+                    <?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?>
+                        <br />(<?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> 
+                        <?php echo Mage::helper('tax')->getIncExcText(true) ?>)
+                    <?php endif; ?>
+                <?php endif; ?>
+            </p>
+        </div>
+   <?php
+   /**
+    *Display onestep Checkout
+    */
+   if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+            <div class="minicart-actions">
+                <a class="cart-link" href="<?php echo $this->getUrl('checkout/cart'); ?>">
+                    <?php echo $this->__('View Shopping Cart'); ?>
+                </a>
+                <ul class="checkout-types minicart">
+                    <?php 
+                    /**
+                     * Get Extra Actions
+                     */
+                    echo $this->getChildHtml('extra_actions') ?>
+                    <li>
+                        <a title="<?php echo $this->__('Checkout') ?>" class="button checkout-button" 
+                        href="<?php echo $this->getCheckoutUrl() ?>">
+                            <?php echo $this->__('Checkout') ?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        <?php endif ?>
+           <?php else: ?>
+           <?php 
+           /**
+            * Display Empty cart
+            */
+            ?>
+        <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+ <?php endif ?>
+</div>
+<?php }?>

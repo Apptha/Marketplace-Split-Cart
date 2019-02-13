@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * Apptha
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.apptha.com/LICENSE.txt
+ *
+ * ==============================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * ==============================================================
+ * This package designed for Magento COMMUNITY edition
+ * Apptha does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * Apptha does not provide extension support in case of
+ * incorrect edition usage.
+ * ==============================================================
+ *
+ * @category    Apptha
+ 
+ * @package     Apptha_Multicart
+ 
+ * @version    	1.0.0
+ 
+ * @author      Apptha Team <developers@contus.in>
+ 
+ * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
+ 
+ * @license     http://www.apptha.com/LICENSE.txt
+ * 
+ */
+ -->
+<config>
+    <modules>
+        <Apptha_Multicart>
+            <version>1.0.0</version>
+        </Apptha_Multicart>
+    </modules>
+    <frontend>
+        <layout>
+            <updates>
+                <multicart module="Apptha_Multicart">
+                    <file>multicart.xml</file>
+                </multicart>
+            </updates>
+        </layout>
+       	<routers>
+            <multicart>
+                <use>standard</use>
+                <args>
+                    <module>Apptha_Multicart</module>
+                    <frontName>multicart</frontName>
+                </args>
+            </multicart>
+        </routers>  
+        <events>
+     <controller_action_predispatch_checkout_onepage_index >
+        <observers>
+            <additionalproduct>
+                <type>singleton</type>
+                <class>multicart/Observer</class>
+                <method>addSellerProductToCheckout</method>
+            </additionalproduct>
+        </observers>
+    </controller_action_predispatch_checkout_onepage_index >
+     <controller_action_predispatch_onestepcheckout_index_index >
+        <observers>
+            <additionalproduct>
+                <type>singleton</type>
+                <class>multicart/Observer</class>
+                <method>addSellerProductToCheckout</method>
+            </additionalproduct>
+        </observers>
+    </controller_action_predispatch_onestepcheckout_index_index >
+    <controller_action_predispatch_checkout_cart_index >
+        <observers>
+            <additionalproducts>
+                <type>singleton</type>
+                <class>multicart/Observer</class>
+                <method>addProductToCart</method>
+            </additionalproducts>
+        </observers>
+    </controller_action_predispatch_checkout_cart_index >
+      <checkout_cart_save_after>
+        <observers>
+            <additionalproduct>
+                <type>singleton</type>
+                <class>multicart/Observer</class>
+                <method>addProductToCart</method>
+            </additionalproduct>
+        </observers>
+    </checkout_cart_save_after>
+    <checkout_onepage_controller_success_action>
+        <observers>
+            <additionalproduct>
+                <type>singleton</type>
+                <class>multicart/Observer_checkout</class>
+                <method>orderAfter</method>
+            </additionalproduct>
+        </observers>
+    </checkout_onepage_controller_success_action>
+  <sales_quote_item_qty_set_after>
+                <observers>
+                    <inventory>
+                        <class>multicart/observer</class>
+                        <method>checkQuoteItemQty</method>
+                    </inventory>
+                </observers>
+            </sales_quote_item_qty_set_after> 
+   <!--     <sales_quote_merge_before>
+             <observers>
+              <ws_clearoldcartproducts_observer>
+              <type>singleton</type>
+               <class>multicart/Observer_checkout</class>
+               <method>loadCustomerQuote</method>
+               </ws_clearoldcartproducts_observer> 
+              </observers> 
+              </sales_quote_merge_before>  -->
+              <customer_login>
+                <observers>
+                    <lpf_modulecookie_customer_login>
+                        <type>model</type>
+                        <class>multicart/Observer_checkout</class>
+                        <method>customerLogin</method>
+                    </lpf_modulecookie_customer_login>
+                </observers>
+            </customer_login>
+     <controller_action_predispatch_checkout_cart_updatePost>
+        <observers>
+            <additionalproduct>
+                <type>singleton</type>
+                <class>multicart/Observer</class>
+                <method>emptyCart</method>
+            </additionalproduct>
+        </observers>
+    </controller_action_predispatch_checkout_cart_updatePost>
+   <customer_logout>
+            <observers>
+                <additionalproduct>
+                    <type>singleton</type>
+                    <class>multicart/Observer</class>
+                    <method>customerLogout</method>
+                </additionalproduct>
+            </observers>
+  </customer_logout>
+   </events>
+ </frontend> 
+    <global>
+        <models>
+              <multicart>
+	              <class>Apptha_Multicart_Model</class>
+	              <resourceModel>multicart_resource</resourceModel>
+            </multicart>
+          <!--   <multicart_resource>
+                <class>Apptha_Multicart_Model_Resource</class>
+                <entities>
+                    <attribute_url_key>
+                        <table>multicart_attribute_url_key</table>
+                    </attribute_url_key>
+                </entities>
+            </multicart_resource> -->
+       </models>
+       <helpers>
+           <multicart>
+               <class>Apptha_Multicart_Helper</class>
+           </multicart>
+ 	  </helpers> 
+       <blocks>
+           <multicart>
+                <class>Apptha_Multicart_Block</class>
+            </multicart>
+        </blocks>
+        <resources>
+            <multicart_setup>
+                <setup>
+                    <module>Apptha_Multicart</module>
+                </setup>
+            </multicart_setup>
+        </resources>
+   </global>
+</config>
