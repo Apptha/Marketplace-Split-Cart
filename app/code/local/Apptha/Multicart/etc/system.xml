@@ -22,7 +22,7 @@
  *
  * @category    Apptha
  * @package     Apptha_Multicart
- * @version    	1.0.0
+ * @version     1.0.0
  * @author      Apptha Team <developers@contus.in>
  * @copyright   Copyright (c) 2015 Apptha. (http://www.apptha.com)
  * @license     http://www.apptha.com/LICENSE.txt
@@ -62,18 +62,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </enabled>
-                   <license_key translate="label">
-                            <label>Enter License key</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <enabled>1</enabled>
-                            </depends>
-                        </license_key>  
+                        </enabled>                   
                     </fields>
                 </catalog>
             </groups>
