@@ -36,12 +36,6 @@
  */
 if(Mage::getStoreConfig("multicart/catalog/enabled")){
 $helper = Mage::helper('multicart');
- if(!$helper->checkMulticartKey()): ?>
-		<div class="invalid-licence">Invalid License Key
-			<?php echo $helper->getLicenseText(); ?>
-		</div>
-	<?php endif; ?>
-<?php 
 /**
  * Adding Session Message
  */
@@ -434,16 +428,16 @@ $displayInCart=Mage::getStoreConfig("onestepcheckout/general/Activate_apptha_one
  * Defining url for checkout button
 */
 if($oneStepCheckoutEnabled && $displayInCart==0 ){
-	/**
-	 * Onestepcheckout url
-	 */
-	$url=Mage::getUrl('onestepcheckout');
+    /**
+     * Onestepcheckout url
+     */
+    $url=Mage::getUrl('onestepcheckout');
 }
 else{
-	/**
-	 * Onepage Url
-	 */
-	$url= Mage::getUrl('checkout/onepage');
+    /**
+     * Onepage Url
+     */
+    $url= Mage::getUrl('checkout/onepage');
 }
 ?>
 <form action="<?php echo $url ?>" method="POST">
